@@ -1,21 +1,39 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ListarCafes } from './listar-cafes';
+import { Component, OnInit } from '@angular/core';
+import { Cafe } from '../models/cafe';
+import { CafeService } from '../services/cafe.service';
 
-describe('ListarCafes', () => {
-  let component: ListarCafes;
-  let fixture: ComponentFixture<ListarCafes>;
+@Component({
+  selector: 'app-listar-cafes',
+  standalone: false,
+  styleUrl: './listar-cafes.css',
+  templateUrl: './listar-cafes.html',
+})
+export class ListarCafes implements OnInit {
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ListarCafes],
-    }).compileComponents();
+  cafes: Cafe[] = [];
 
-    fixture = TestBed.createComponent(ListarCafes);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
-  });
+  constructor(private cafeService: CafeService) {}
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  ngOnInit(): void {
+    this.cafeService.getCafes().subscribe({
+      next: (data) => {
+        this.cafes = data;
+      },
+      error: (error) => {
+        console.error('Error al consultar los cafés:', error);
+      }
+    });
+  }
+
+  get totalOrigen(): number {
+    return this.cafes.filter(
+      cafe => cafe.tipo === 'Café de Origen'
+    ).length;
+  }
+
+  get totalBlend(): number {
+    return this.cafes.filter(
+      cafe => cafe.tipo === 'Blend'
+    ).length;
+  }
+}
