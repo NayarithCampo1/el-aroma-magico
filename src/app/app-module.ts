@@ -1,4 +1,5 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { App } from './app';
 
@@ -11,6 +12,7 @@ import { App } from './app';
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideHttpClient()
   ],
   bootstrap: [App]
 })
