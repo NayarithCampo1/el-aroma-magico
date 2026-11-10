@@ -1,8 +1,11 @@
 .titulo-cafe {
-  font-weight: bold;
+  font-family: 'Coming Soon', cursive;
+  font-weight: 400;
+  font-size: 32px;
   padding: 15px 0;
   border-top: 2px solid #333;
-  border-bottom: 2px solid #333;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
 }
 
 .banner-cafe {

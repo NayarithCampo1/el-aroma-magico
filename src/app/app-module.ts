@@ -16,4 +16,4 @@ import { CafeModule } from './cafe/cafe-module';
   ],
   bootstrap: [App]
 })
-export class AppModule { }
+export class AppModule {}

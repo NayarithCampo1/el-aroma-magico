@@ -1,26 +1,40 @@
+
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { AppModule } from './app-module';
+import { CafeService } from './cafe/services/cafe.service';
+import { of } from 'rxjs';
 
 describe('App', () => {
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        App
-      ],
-    })
-      .compileComponents();
+      imports: [AppModule],
+      providers: [
+        {
+          provide: CafeService,
+          useValue: {
+            getCafes: () => of([])
+          }
+        }
+      ]
+    }).compileComponents();
   });
 
-  it('should create the app', () => {
+  it('debería crear la aplicación', () => {
     const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('debería mostrar el componente de listado de cafés', () => {
     const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, el-aroma-magico');
+    fixture.detectChanges();
+
+    const elemento = fixture.nativeElement as HTMLElement;
+
+    expect(
+      elemento.querySelector('app-listar-cafes')
+    ).toBeTruthy();
   });
+
 });

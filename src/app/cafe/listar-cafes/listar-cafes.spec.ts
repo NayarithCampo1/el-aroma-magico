@@ -1,39 +1,52 @@
-import { Component, OnInit } from '@angular/core';
-import { Cafe } from '../models/cafe';
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { ListarCafes } from './listar-cafes';
 import { CafeService } from '../services/cafe.service';
+import { Cafe } from '../models/cafe';
+import { CommonModule } from '@angular/common';
 
-@Component({
-  selector: 'app-listar-cafes',
-  standalone: false,
-  styleUrl: './listar-cafes.css',
-  templateUrl: './listar-cafes.html',
-})
-export class ListarCafes implements OnInit {
+describe('ListarCafes', () => {
+  let component: ListarCafes;
+  let fixture: ComponentFixture<ListarCafes>;
 
-  cafes: Cafe[] = [];
+  const cafesMock: Cafe[] = [
+    new Cafe(1, 'Café A', 'Café de Origen', 'Nariño', 'Dulce', 1800, 'imagen1.jpg'),
+    new Cafe(2, 'Café B', 'Blend', 'Antioquia', 'Suave', 1600, 'imagen2.jpg'),
+    new Cafe(3, 'Café C', 'Café de Origen', 'Huila', 'Frutal', 1700, 'imagen3.jpg')
+  ];
 
-  constructor(private cafeService: CafeService) {}
+  const cafeServiceMock = {
+    getCafes: () => of(cafesMock)
+  };
 
-  ngOnInit(): void {
-    this.cafeService.getCafes().subscribe({
-      next: (data) => {
-        this.cafes = data;
-      },
-      error: (error) => {
-        console.error('Error al consultar los cafés:', error);
-      }
-    });
-  }
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ListarCafes],
+      imports: [CommonModule],
+      providers: [
+        { provide: CafeService, useValue: cafeServiceMock }
+      ]
+    }).compileComponents();
 
-  get totalOrigen(): number {
-    return this.cafes.filter(
-      cafe => cafe.tipo === 'Café de Origen'
-    ).length;
-  }
+    fixture = TestBed.createComponent(ListarCafes);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-  get totalBlend(): number {
-    return this.cafes.filter(
-      cafe => cafe.tipo === 'Blend'
-    ).length;
-  }
-}
+  it('debería crear el componente', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('debería mostrar tres cafés en la tabla', () => {
+    const filas = fixture.nativeElement.querySelectorAll('tbody tr');
+    expect(filas.length).toBe(3);
+  });
+
+  it('debería mostrar una fila de encabezado y tres filas de datos', () => {
+    const encabezados = fixture.nativeElement.querySelectorAll('thead tr');
+    const filasDatos = fixture.nativeElement.querySelectorAll('tbody tr');
+
+    expect(encabezados.length + filasDatos.length).toBe(4);
+  });
+});
